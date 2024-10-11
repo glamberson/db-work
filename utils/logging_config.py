@@ -1,47 +1,14 @@
-# utils/logging_config.py
 import logging
-import logging.config
 
 def setup_logging():
-    logging.config.dictConfig({
-        'version': 1,
-        'disable_existing_loggers': False,
-        'formatters': {
-            'standard': {
-                'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
-            },
-        },
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'standard',
-                'level': 'DEBUG',
-            },
-        },
-        'root': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        },
-        'loggers': {
-            '__main__': {
-                'handlers': ['console'],
-                'level': 'DEBUG',
-                'propagate': False
-            },
-            'models': {
-                'handlers': ['console'],
-                'level': 'DEBUG',
-                'propagate': False
-            },
-            'controllers': {
-                'handlers': ['console'],
-                'level': 'DEBUG',
-                'propagate': False
-            },
-            'ui': {
-                'handlers': ['console'],
-                'level': 'DEBUG',
-                'propagate': False
-            },
-        }
-    })
+    # Existing logging setup code
+    pass
+
+def clean_currency_string(value):
+    """
+    Cleans a currency string by removing symbols and commas.
+    """
+    if isinstance(value, str):
+        # Remove currency symbols and commas
+        value = value.replace('$', '').replace(',', '')
+    return value
