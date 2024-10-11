@@ -4,6 +4,7 @@ from models.data_models import StagedRecord, MRLRecord, Match
 from models.database import DatabaseConnection
 from Levenshtein import ratio
 import logging
+from utils.logging_config import clean_currency_string
 
 logger = logging.getLogger(__name__)
 
@@ -96,8 +97,8 @@ class MatchFinder:
 
         # Convert MONEY fields to float
         if 'market_research_up' in record_data and record_data['market_research_up'] is not None:
-            record_data['market_research_up'] = float(record_data['market_research_up'])
+            record_data['market_research_up'] = float(clean_currency_string(record_data['market_research_up']))
         if 'market_research_ep' in record_data and record_data['market_research_ep'] is not None:
-            record_data['market_research_ep'] = float(record_data['market_research_ep'])
+            record_data['market_research_ep'] = float(clean_currency_string(record_data['market_research_ep']))
 
         return MRLRecord(**record_data)
