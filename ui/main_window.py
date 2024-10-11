@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QCheckBox, QSizePolicy, QButtonGroup, QRadioButton
 )
 from PySide6.QtCore import Slot, Qt, QSettings
+from PySide6.QtGui import QColor
 from controllers.main_controller import MainController
 from ui.matching_detail_window import MatchingDetailWindow
 import logging
@@ -225,6 +226,7 @@ class MainWindow(QMainWindow):
         self.results_table.setRowCount(len(data))
         for row, record in enumerate(data):
             checkbox = QCheckBox()
+            checkbox.stateChanged.connect(lambda state, row=row: self.highlight_row(state, row))
             self.results_table.setCellWidget(row, 0, checkbox)
 
             for col, column_name in enumerate(self.column_names):
@@ -233,6 +235,13 @@ class MainWindow(QMainWindow):
                 self.results_table.setItem(row, col + 1, QTableWidgetItem(display_value))
 
         self.record_count_label.setText(f"Records: {len(data)}")
+
+    def highlight_row(self, state, row):
+        color = QColor(255, 255, 200) if state == Qt.Checked else QColor(255, 255, 255)
+        for col in range(self.results_table.columnCount()):
+            item = self.results_table.item(row, col)
+            if item:
+                item.setBackground(color)
 
     def populate_report_names(self):
         # Corrected line: Use self.controller to get report names
