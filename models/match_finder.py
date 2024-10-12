@@ -53,6 +53,9 @@ class MatchFinder:
                     field_scores=field_scores
                 ))
 
+        # Sort potential matches by score in descending order
+        potential_matches.sort(key=lambda match: match.score, reverse=True)
+
         return potential_matches
 
     def calculate_match_score(self, search_record: StagedRecord, mrl_record: MRLRecord):

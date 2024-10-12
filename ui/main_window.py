@@ -1,5 +1,3 @@
-# ui/main_window.py
-
 import csv
 from PySide6.QtWidgets import (
     QMainWindow, QVBoxLayout, QHBoxLayout, QWidget,
@@ -87,6 +85,11 @@ class MainWindow(QMainWindow):
         self.find_matches_button = QPushButton("Find Matches")
         self.find_matches_button.clicked.connect(self.find_matches)
         main_layout.addWidget(self.find_matches_button)
+
+        # Add Detail/Summary button
+        self.detail_summary_button = QPushButton("Detail/Summary")
+        self.detail_summary_button.clicked.connect(self.toggle_detail_summary)
+        main_layout.addWidget(self.detail_summary_button)
 
         # Status Bar
         self.status_bar = QStatusBar()
@@ -223,16 +226,21 @@ class MainWindow(QMainWindow):
         layout.addWidget(export_button)
 
     def display_results(self, data):
-        self.results_table.setRowCount(len(data))
+        self.results_table.setRowCount(len(data) * 2)  # Double the rows for vertical display
         for row, record in enumerate(data):
             checkbox = QCheckBox()
             checkbox.stateChanged.connect(lambda state, row=row: self.highlight_row(state, row))
-            self.results_table.setCellWidget(row, 0, checkbox)
+            self.results_table.setCellWidget(row * 2, 0, checkbox)
 
             for col, column_name in enumerate(self.column_names):
                 value = record.get(column_name)
                 display_value = '' if value is None else str(value)
-                self.results_table.setItem(row, col + 1, QTableWidgetItem(display_value))
+                self.results_table.setItem(row * 2, col + 1, QTableWidgetItem(display_value))
+
+                # Add the second record (MRL) below the first
+                mrl_value = record.get(f"mrl_{column_name}", "")
+                mrl_display_value = '' if mrl_value is None else str(mrl_value)
+                self.results_table.setItem(row * 2 + 1, col + 1, QTableWidgetItem(mrl_display_value))
 
         self.record_count_label.setText(f"Records: {len(data)}")
 
@@ -242,6 +250,12 @@ class MainWindow(QMainWindow):
             item = self.results_table.item(row, col)
             if item:
                 item.setBackground(color)
+
+    def toggle_detail_summary(self):
+        # Logic to toggle between detail and summary view
+        # This is a placeholder for the actual implementation
+        logger.info("Toggling detail/summary view")
+        self.status_bar.showMessage("Toggling detail/summary view...")
 
     def populate_report_names(self):
         # Corrected line: Use self.controller to get report names
